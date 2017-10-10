@@ -30,11 +30,22 @@ window.addEventListener('DOMContentLoaded', function() {
     var createMaterial = function(scene) {
         var material = {
             "grass": new BABYLON.StandardMaterial('grass', scene),
+            "gray_metal": new BABYLON.StandardMaterial('gray_metal', scene),
+            "glass": new BABYLON.StandardMaterial('glass', scene),
         }
 
         material.grass.diffuseTexture = new BABYLON.Texture("img/textures/grass.jpg", scene);
         material.grass.diffuseTexture.vScale = 50.0;
         material.grass.diffuseTexture.uScale = 50.0;
+
+        material.gray_metal.diffuseColor = new BABYLON.Color3(0.2,0.2,0.2);
+        material.gray_metal.emissiveColor = new BABYLON.Color3(0.2,0.2,0.2);
+        material.gray_metal.specularColor = new BABYLON.Color3(0.8,0.8,0.8);
+
+        material.glass.diffuseColor = new BABYLON.Color3(0.0,0.0,0.1);
+        material.glass.emissiveColor = new BABYLON.Color3(0.0,0.0,0.1);
+        material.glass.specularColor = new BABYLON.Color3(0.8,0.8,0.8);
+        material.glass.alpha = 0.4;
 
         return material;
     }
@@ -79,20 +90,31 @@ window.addEventListener('DOMContentLoaded', function() {
             cube.position.x = e.px;
             cube.position.y = e.py;
             cube.position.z = e.pz;
+            cube.material = material.gray_metal;
         });
 
+        // create windows
+        var windows = [
+            //
+            {"sx": 1.0, "sy": 2.4, "sz": 0.05, "px": -3.0+1.0*1.0-1.0/2.0, "py": 2.5/2.0, "pz": 3.0},
+            {"sx": 1.0, "sy": 2.4, "sz": 0.05, "px": -3.0+1.0*2.0-1.0/2.0, "py": 2.5/2.0, "pz": 3.0},
+            {"sx": 1.0, "sy": 2.4, "sz": 0.05, "px": -3.0+1.0*3.0-1.0/2.0, "py": 2.5/2.0, "pz": 3.0},
+            {"sx": 1.0, "sy": 2.4, "sz": 0.05, "px": -3.0+1.0*4.0-1.0/2.0, "py": 2.5/2.0, "pz": 3.0},
+            {"sx": 1.0, "sy": 2.4, "sz": 0.05, "px": -3.0+1.0*5.0-1.0/2.0, "py": 2.5/2.0, "pz": 3.0},
+            {"sx": 1.0, "sy": 2.4, "sz": 0.05, "px": -3.0+1.0*6.0-1.0/2.0, "py": 2.5/2.0, "pz": 3.0},
+        ];
 
-        //murs pour le store
-        var triangle1 = [ 
-            new BABYLON.Vector3(0,-10,0),
-            new BABYLON.Vector3(-70,-70,0),
-            new BABYLON.Vector3(-70,-105,0),
-        ];
-        var triangle2 = [
-            new BABYLON.Vector3(0,10,0),
-            new BABYLON.Vector3(-70,70,0),
-            new BABYLON.Vector3(-70,105,0),
-        ];
+        windows.forEach(function(e, i){
+            var cube = BABYLON.Mesh.CreateBox('consercatory_windows_' + i, 1, scene);
+            cube.scaling.x = e.sx;
+            cube.scaling.y = e.sy;
+            cube.scaling.z = e.sz;
+            cube.position.x = e.px;
+            cube.position.y = e.py;
+            cube.position.z = e.pz;
+            cube.material = material.glass;
+        });
+
     }
 
     // call the createScene function
@@ -100,7 +122,7 @@ window.addEventListener('DOMContentLoaded', function() {
 
     var material = createMaterial(scene);
 
-    createGround(scene);
+    //createGround(scene);
     createConservatory(scene);
 
     // run the render loop
