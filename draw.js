@@ -143,6 +143,35 @@ window.addEventListener('DOMContentLoaded', function() {
             glass_armature_4.position= new BABYLON.Vector3(-0.5,0.0,0.0);
         });
 
+        // create glass roof
+
+        var paths = [
+            [new BABYLON.Vector3(0.0, 3.0, 0.0), new BABYLON.Vector3(-3.0, 2.5, 0.0)],
+            [new BABYLON.Vector3(0.0, 3.0, 0.0), new BABYLON.Vector3(-3.0, 2.5, 1.0)],
+            [new BABYLON.Vector3(0.0, 3.0, 0.0), new BABYLON.Vector3(-3.0, 2.5, 2.0)],
+            [new BABYLON.Vector3(0.0, 3.0, 0.0), new BABYLON.Vector3(-3.0, 2.5, 3.0)],
+
+            [new BABYLON.Vector3(0.0, 3.0, 0.0), new BABYLON.Vector3(-3.0, 2.5, 3.0)],
+            [new BABYLON.Vector3(0.0, 3.0, 0.0), new BABYLON.Vector3(-2.0, 2.5, 3.0)],
+            [new BABYLON.Vector3(0.0, 3.0, 0.0), new BABYLON.Vector3(-1.0, 2.5, 3.0)],
+            [new BABYLON.Vector3(0.0, 3.0, 0.0), new BABYLON.Vector3( 0.0, 2.5, 3.0)],
+            [new BABYLON.Vector3(0.0, 3.0, 0.0), new BABYLON.Vector3( 1.0, 2.5, 3.0)],
+            [new BABYLON.Vector3(0.0, 3.0, 0.0), new BABYLON.Vector3( 2.0, 2.5, 3.0)],
+            [new BABYLON.Vector3(0.0, 3.0, 0.0), new BABYLON.Vector3( 3.0, 2.5, 3.0)],
+
+            [new BABYLON.Vector3(0.0, 3.0, 0.0), new BABYLON.Vector3( 3.0, 2.5, 0.0)],
+            [new BABYLON.Vector3(0.0, 3.0, 0.0), new BABYLON.Vector3( 3.0, 2.5, 1.0)],
+            [new BABYLON.Vector3(0.0, 3.0, 0.0), new BABYLON.Vector3( 3.0, 2.5, 2.0)],
+            [new BABYLON.Vector3(0.0, 3.0, 0.0), new BABYLON.Vector3( 3.0, 2.5, 3.0)],
+        ];
+
+        paths.forEach(function(e, i){
+            var lines = BABYLON.Mesh.CreateLines("par" + i, e, scene);
+        });
+
+        var ribbon = BABYLON.Mesh.CreateRibbon("consercatory_roof", paths, false, false, 0, scene);
+        ribbon.material = material.glass;
+
     }
 
     // call the createScene function
