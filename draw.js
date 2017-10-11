@@ -45,6 +45,7 @@ window.addEventListener('DOMContentLoaded', function() {
         material.glass.diffuseColor = new BABYLON.Color3(0.0,0.0,0.1);
         material.glass.emissiveColor = new BABYLON.Color3(0.0,0.0,0.1);
         material.glass.specularColor = new BABYLON.Color3(0.8,0.8,0.8);
+        material.glass.backFaceCulling = false;
         material.glass.alpha = 0.4;
 
         return material;
@@ -94,25 +95,52 @@ window.addEventListener('DOMContentLoaded', function() {
         });
 
         // create windows
-        var windows = [
-            //
-            {"sx": 1.0, "sy": 2.4, "sz": 0.05, "px": -3.0+1.0*1.0-1.0/2.0, "py": 2.5/2.0, "pz": 3.0},
-            {"sx": 1.0, "sy": 2.4, "sz": 0.05, "px": -3.0+1.0*2.0-1.0/2.0, "py": 2.5/2.0, "pz": 3.0},
-            {"sx": 1.0, "sy": 2.4, "sz": 0.05, "px": -3.0+1.0*3.0-1.0/2.0, "py": 2.5/2.0, "pz": 3.0},
-            {"sx": 1.0, "sy": 2.4, "sz": 0.05, "px": -3.0+1.0*4.0-1.0/2.0, "py": 2.5/2.0, "pz": 3.0},
-            {"sx": 1.0, "sy": 2.4, "sz": 0.05, "px": -3.0+1.0*5.0-1.0/2.0, "py": 2.5/2.0, "pz": 3.0},
-            {"sx": 1.0, "sy": 2.4, "sz": 0.05, "px": -3.0+1.0*6.0-1.0/2.0, "py": 2.5/2.0, "pz": 3.0},
+        var glass_scaling = new BABYLON.Vector3(1.0, 2.3, 0.01);
+        var glass_params = [
+            {"position": new BABYLON.Vector3(-3.0+1.0*1.0-1.0/2.0, 2.5/2.0, 3.0), "rotation": new BABYLON.Vector3(0,0,0)},
+            {"position": new BABYLON.Vector3(-3.0+1.0*2.0-1.0/2.0, 2.5/2.0, 3.0), "rotation": new BABYLON.Vector3(0,0,0)},
+            {"position": new BABYLON.Vector3(-3.0+1.0*3.0-1.0/2.0, 2.5/2.0, 3.0), "rotation": new BABYLON.Vector3(0,0,0)},
+            {"position": new BABYLON.Vector3(-3.0+1.0*4.0-1.0/2.0, 2.5/2.0, 3.0), "rotation": new BABYLON.Vector3(0,0,0)},
+            {"position": new BABYLON.Vector3(-3.0+1.0*5.0-1.0/2.0, 2.5/2.0, 3.0), "rotation": new BABYLON.Vector3(0,0,0)},
+            {"position": new BABYLON.Vector3(-3.0+1.0*6.0-1.0/2.0, 2.5/2.0, 3.0), "rotation": new BABYLON.Vector3(0,0,0)},
+
+            {"position": new BABYLON.Vector3(-3.0, 2.5/2.0, 3.0-1.0*0.0-1.0/2.0), "rotation": new BABYLON.Vector3(0,Math.PI/2,0)},
+            {"position": new BABYLON.Vector3(-3.0, 2.5/2.0, 3.0-1.0*1.0-1.0/2.0), "rotation": new BABYLON.Vector3(0,Math.PI/2,0)},
+            {"position": new BABYLON.Vector3(-3.0, 2.5/2.0, 3.0-1.0*2.0-1.0/2.0), "rotation": new BABYLON.Vector3(0,Math.PI/2,0)},
+
+            {"position": new BABYLON.Vector3( 3.0, 2.5/2.0, 3.0-1.0*0.0-1.0/2.0), "rotation": new BABYLON.Vector3(0,Math.PI/2,0)},
+            {"position": new BABYLON.Vector3( 3.0, 2.5/2.0, 3.0-1.0*1.0-1.0/2.0), "rotation": new BABYLON.Vector3(0,Math.PI/2,0)},
+            {"position": new BABYLON.Vector3( 3.0, 2.5/2.0, 3.0-1.0*2.0-1.0/2.0), "rotation": new BABYLON.Vector3(0,Math.PI/2,0)},
         ];
 
-        windows.forEach(function(e, i){
-            var cube = BABYLON.Mesh.CreateBox('consercatory_windows_' + i, 1, scene);
-            cube.scaling.x = e.sx;
-            cube.scaling.y = e.sy;
-            cube.scaling.z = e.sz;
-            cube.position.x = e.px;
-            cube.position.y = e.py;
-            cube.position.z = e.pz;
-            cube.material = material.glass;
+        glass_params.forEach(function(e, i){
+            // Glass
+            var glass = BABYLON.Mesh.CreateBox('consercatory_windows_' + i, 1, scene);
+            glass.position = e.position;
+            glass.scaling  = glass_scaling;
+            glass.material = material.glass;
+            glass.rotation = e.rotation;
+
+            // Glass' armature
+            var glass_armature_1 = BABYLON.Mesh.CreateBox('consercatory_windows_' + i + '_armature_1', 1, scene); // horizontal bottom
+            glass_armature_1.parent = glass;
+            glass_armature_1.scaling = new BABYLON.Vector3(1.0,0.01,3.0);
+            glass_armature_1.position= new BABYLON.Vector3(0.0,-0.5,0.0);
+
+            var glass_armature_2 = BABYLON.Mesh.CreateBox('consercatory_windows_' + i + '_armature_2', 1, scene); // horizontal top
+            glass_armature_2.parent = glass;
+            glass_armature_2.scaling = new BABYLON.Vector3(1.0,0.01,3.0);
+            glass_armature_2.position= new BABYLON.Vector3(0.0,0.5,0.0);
+
+            var glass_armature_3 = BABYLON.Mesh.CreateBox('consercatory_windows_' + i + '_armature_3', 1, scene); // vertical right
+            glass_armature_3.parent = glass;
+            glass_armature_3.scaling = new BABYLON.Vector3(0.02,1.0,3.0);
+            glass_armature_3.position= new BABYLON.Vector3(0.5,0.0,0.0);
+
+            var glass_armature_4 = BABYLON.Mesh.CreateBox('consercatory_windows_' + i + '_armature_4', 1, scene); // vertical left
+            glass_armature_4.parent = glass;
+            glass_armature_4.scaling = new BABYLON.Vector3(0.02,1.0,3.0);
+            glass_armature_4.position= new BABYLON.Vector3(-0.5,0.0,0.0);
         });
 
     }
