@@ -23,6 +23,9 @@ window.addEventListener('DOMContentLoaded', function() {
         // create a basic light, aiming 0,1,0 - meaning, to the sky
         var light = new BABYLON.HemisphericLight('light_1', new BABYLON.Vector3(0,1,0), scene);
 
+        // Let's try our built-in 'sphere' shape. Params: name, subdivisions, size, scene
+        var sphere = BABYLON.Mesh.CreateSphere("sphere_repère", 16, 2, scene);
+
         // return the created scene
         return scene;
     }
@@ -35,6 +38,7 @@ window.addEventListener('DOMContentLoaded', function() {
         }
 
         material.grass.diffuseTexture = new BABYLON.Texture("img/textures/grass.jpg", scene);
+        material.grass.specularColor = new BABYLON.Color3(0.0,0.0,0.0);
         material.grass.diffuseTexture.vScale = 50.0;
         material.grass.diffuseTexture.uScale = 50.0;
 
@@ -58,12 +62,6 @@ window.addEventListener('DOMContentLoaded', function() {
     }
 
     var createConservatory = function(scene) {
-        // Let's try our built-in 'sphere' shape. Params: name, subdivisions, size, scene
-        var sphere = BABYLON.Mesh.CreateSphere("sphere1", 16, 2, scene);
-
-        // Move the sphere upward 1/2 its height
-        sphere.position.y = 1;
-
         // create armature
         var armature = [
             // 4 pieds
@@ -166,10 +164,10 @@ window.addEventListener('DOMContentLoaded', function() {
         ];
 
         paths.forEach(function(e, i){
-            var lines = BABYLON.Mesh.CreateLines("par" + i, e, scene);
+            var lines = BABYLON.Mesh.CreateLines("conservatory_roof_armature_" + i, e, scene); // draw edges
         });
 
-        var ribbon = BABYLON.Mesh.CreateRibbon("consercatory_roof", paths, false, false, 0, scene);
+        var ribbon = BABYLON.Mesh.CreateRibbon("consercatory_roof", paths, false, false, 0, scene); // draw faces
         ribbon.material = material.glass;
 
     }
@@ -179,7 +177,10 @@ window.addEventListener('DOMContentLoaded', function() {
 
     var material = createMaterial(scene);
 
-    //createGround(scene);
+    // create ground
+    createGround(scene);
+
+    // create conservatory
     createConservatory(scene);
 
     // run the render loop
