@@ -1,3 +1,5 @@
+
+
 window.addEventListener('DOMContentLoaded', function() {
 
     var canvas = document.getElementById('renderCanvas');
@@ -24,7 +26,7 @@ window.addEventListener('DOMContentLoaded', function() {
         var light = new BABYLON.HemisphericLight('light_1', new BABYLON.Vector3(0,1,0), scene);
 
         // Let's try our built-in 'sphere' shape. Params: name, subdivisions, size, scene
-        var sphere = BABYLON.Mesh.CreateSphere("sphere_repère", 16, 2, scene);
+        //var sphere = BABYLON.Mesh.CreateSphere("sphere_repère", 16, 2, scene);
 
         // return the created scene
         return scene;
@@ -39,6 +41,7 @@ window.addEventListener('DOMContentLoaded', function() {
 
         material.grass.diffuseTexture = new BABYLON.Texture("img/textures/grass.jpg", scene);
         material.grass.specularColor = new BABYLON.Color3(0.0,0.0,0.0);
+        material.grass.backFaceCulling = false;
         material.grass.diffuseTexture.vScale = 50.0;
         material.grass.diffuseTexture.uScale = 50.0;
 
@@ -57,32 +60,44 @@ window.addEventListener('DOMContentLoaded', function() {
 
     var createGround = function(scene) {
         // create a built-in "ground" shape; its constructor takes 5 params: name, width, height, subdivisions and scene
-        var ground = BABYLON.Mesh.CreateGround('ground_1', 60, 60, 2, scene);
+        var ground = BABYLON.Mesh.CreateGround('ground', 30, 30, 2, scene);
+        //var ground = BABYLON.MeshBuilder.CreateSphere("sphere", {diameterX: 25, diameterY: 0.001, diameterZ: 25}, scene);
         ground.material = material.grass;
     }
 
     var createConservatory = function(scene) {
+        var conservatory = BABYLON.Mesh.CreateBox("conservatory", 0.01, scene);
+        conservatory.alpha = 0.0;
+
+        conservatory_data = {
+            x: 6.0, // height
+            y: 2.9, // hight
+            z: 3.0, // width
+        }
+
         // create armature
+        var armature_radius = 0.1;
         var armature = [
             // 4 pieds
-            {"sx": 0.1, "sy": 2.5, "sz": 0.1, "px": 3.0, "py": 2.5/2.0, "pz": 0.0},
-            {"sx": 0.1, "sy": 2.5, "sz": 0.1, "px": 3.0, "py": 2.5/2.0, "pz": 3.0},
-            {"sx": 0.1, "sy": 2.5, "sz": 0.1, "px":-3.0, "py": 2.5/2.0, "pz": 0.0},
-            {"sx": 0.1, "sy": 2.5, "sz": 0.1, "px":-3.0, "py": 2.5/2.0, "pz": 3.0},
+            {"sx": armature_radius, "sy": conservatory_data.y, "sz": armature_radius, "px": conservatory_data.x/2.0, "py": conservatory_data.y/2.0, "pz": 0.0},
+            {"sx": armature_radius, "sy": conservatory_data.y, "sz": armature_radius, "px": conservatory_data.x/2.0, "py": conservatory_data.y/2.0, "pz": conservatory_data.z},
+            {"sx": armature_radius, "sy": conservatory_data.y, "sz": armature_radius, "px":-conservatory_data.x/2.0, "py": conservatory_data.y/2.0, "pz": 0.0},
+            {"sx": armature_radius, "sy": conservatory_data.y, "sz": armature_radius, "px":-conservatory_data.x/2.0, "py": conservatory_data.y/2.0, "pz": conservatory_data.z},
             // 
-            {"sx": 6.0, "sy": 0.1, "sz": 0.1, "px": 0.0, "py": 2.5-0.1/2.0, "pz": 3.0},
-            {"sx": 6.0, "sy": 0.1, "sz": 0.1, "px": 0.0, "py": 2.5-0.1/2.0, "pz": 0.0},
-            {"sx": 6.0, "sy": 0.1, "sz": 0.1, "px": 0.0, "py": 0.0+0.1/2.0, "pz": 3.0},
-            {"sx": 6.0, "sy": 0.1, "sz": 0.1, "px": 0.0, "py": 0.0+0.1/2.0, "pz": 0.0},
+            {"sx": conservatory_data.x, "sy": armature_radius, "sz": armature_radius, "px": 0.0, "py": conservatory_data.y-0.1/2.0, "pz": conservatory_data.z},
+            {"sx": conservatory_data.x, "sy": armature_radius, "sz": armature_radius, "px": 0.0, "py": conservatory_data.y-0.1/2.0, "pz": 0.0},
+            {"sx": conservatory_data.x, "sy": armature_radius, "sz": armature_radius, "px": 0.0, "py": 0.0+0.1/2.0, "pz": conservatory_data.z},
+            {"sx": conservatory_data.x, "sy": armature_radius, "sz": armature_radius, "px": 0.0, "py": 0.0+0.1/2.0, "pz": 0.0},
             //
-            {"sx": 0.1, "sy": 0.1, "sz": 3.0, "px": 3.0, "py": 2.5-0.1/2.0, "pz": 3.0/2.0},
-            {"sx": 0.1, "sy": 0.1, "sz": 3.0, "px": 3.0, "py": 0.0+0.1/2.0, "pz": 3.0/2.0},
-            {"sx": 0.1, "sy": 0.1, "sz": 3.0, "px":-3.0, "py": 2.5-0.1/2.0, "pz": 3.0/2.0},
-            {"sx": 0.1, "sy": 0.1, "sz": 3.0, "px":-3.0, "py": 0.0+0.1/2.0, "pz": 3.0/2.0},
+            {"sx": armature_radius, "sy": armature_radius, "sz": conservatory_data.z, "px": conservatory_data.x/2.0, "py": conservatory_data.y-0.1/2.0, "pz": conservatory_data.z/2.0},
+            {"sx": armature_radius, "sy": armature_radius, "sz": conservatory_data.z, "px": conservatory_data.x/2.0, "py": 0.0+0.1/2.0, "pz": conservatory_data.z/2.0},
+            {"sx": armature_radius, "sy": armature_radius, "sz": conservatory_data.z, "px":-conservatory_data.x/2.0, "py": conservatory_data.y-0.1/2.0, "pz": conservatory_data.z/2.0},
+            {"sx": armature_radius, "sy": armature_radius, "sz": conservatory_data.z, "px":-conservatory_data.x/2.0, "py": 0.0+0.1/2.0, "pz": conservatory_data.z/2.0},
         ];
 
         armature.forEach(function(e, i){
             var cube = BABYLON.Mesh.CreateBox('consercatory_armature_' + i, 1, scene);
+            cube.parent = conservatory;
             cube.scaling.x = e.sx;
             cube.scaling.y = e.sy;
             cube.scaling.z = e.sz;
@@ -93,27 +108,33 @@ window.addEventListener('DOMContentLoaded', function() {
         });
 
         // create windows
-        var glass_scaling = new BABYLON.Vector3(1.0, 2.3, 0.01);
+        glass_data = {
+            x: conservatory_data.z/3.0, // height
+            y: conservatory_data.y - 2 * armature_radius,     // hight
+            z: 0.01,                    // width
+        }
+        var glass_scaling = new BABYLON.Vector3(glass_data.x, glass_data.y, glass_data.z);
         var glass_params = [
-            {"position": new BABYLON.Vector3(-3.0+1.0*1.0-1.0/2.0, 2.5/2.0, 3.0), "rotation": new BABYLON.Vector3(0,0,0)},
-            {"position": new BABYLON.Vector3(-3.0+1.0*2.0-1.0/2.0, 2.5/2.0, 3.0), "rotation": new BABYLON.Vector3(0,0,0)},
-            {"position": new BABYLON.Vector3(-3.0+1.0*3.0-1.0/2.0, 2.5/2.0, 3.0), "rotation": new BABYLON.Vector3(0,0,0)},
-            {"position": new BABYLON.Vector3(-3.0+1.0*4.0-1.0/2.0, 2.5/2.0, 3.0), "rotation": new BABYLON.Vector3(0,0,0)},
-            {"position": new BABYLON.Vector3(-3.0+1.0*5.0-1.0/2.0, 2.5/2.0, 3.0), "rotation": new BABYLON.Vector3(0,0,0)},
-            {"position": new BABYLON.Vector3(-3.0+1.0*6.0-1.0/2.0, 2.5/2.0, 3.0), "rotation": new BABYLON.Vector3(0,0,0)},
+            {"position": new BABYLON.Vector3(-conservatory_data.z + glass_data.x * 1.0 - glass_data.x / 2.0, conservatory_data.y / 2.0, conservatory_data.z), "rotation": new BABYLON.Vector3(0,0,0)},
+            {"position": new BABYLON.Vector3(-conservatory_data.z + glass_data.x * 2.0 - glass_data.x / 2.0, conservatory_data.y / 2.0, conservatory_data.z), "rotation": new BABYLON.Vector3(0,0,0)},
+            {"position": new BABYLON.Vector3(-conservatory_data.z + glass_data.x * 3.0 - glass_data.x / 2.0, conservatory_data.y / 2.0, conservatory_data.z), "rotation": new BABYLON.Vector3(0,0,0)},
+            {"position": new BABYLON.Vector3(-conservatory_data.z + glass_data.x * 4.0 - glass_data.x / 2.0, conservatory_data.y / 2.0, conservatory_data.z), "rotation": new BABYLON.Vector3(0,0,0)},
+            {"position": new BABYLON.Vector3(-conservatory_data.z + glass_data.x * 5.0 - glass_data.x / 2.0, conservatory_data.y / 2.0, conservatory_data.z), "rotation": new BABYLON.Vector3(0,0,0)},
+            {"position": new BABYLON.Vector3(-conservatory_data.z + glass_data.x * 6.0 - glass_data.x / 2.0, conservatory_data.y / 2.0, conservatory_data.z), "rotation": new BABYLON.Vector3(0,0,0)},
 
-            {"position": new BABYLON.Vector3(-3.0, 2.5/2.0, 3.0-1.0*0.0-1.0/2.0), "rotation": new BABYLON.Vector3(0,Math.PI/2,0)},
-            {"position": new BABYLON.Vector3(-3.0, 2.5/2.0, 3.0-1.0*1.0-1.0/2.0), "rotation": new BABYLON.Vector3(0,Math.PI/2,0)},
-            {"position": new BABYLON.Vector3(-3.0, 2.5/2.0, 3.0-1.0*2.0-1.0/2.0), "rotation": new BABYLON.Vector3(0,Math.PI/2,0)},
+            {"position": new BABYLON.Vector3(-conservatory_data.z, conservatory_data.y / 2.0, conservatory_data.z - glass_data.x * 0.0 - glass_data.x / 2.0), "rotation": new BABYLON.Vector3(0,Math.PI/2,0)},
+            {"position": new BABYLON.Vector3(-conservatory_data.z, conservatory_data.y / 2.0, conservatory_data.z - glass_data.x * 1.0 - glass_data.x / 2.0), "rotation": new BABYLON.Vector3(0,Math.PI/2,0)},
+            {"position": new BABYLON.Vector3(-conservatory_data.z, conservatory_data.y / 2.0, conservatory_data.z - glass_data.x * 2.0 - glass_data.x / 2.0), "rotation": new BABYLON.Vector3(0,Math.PI/2,0)},
 
-            {"position": new BABYLON.Vector3( 3.0, 2.5/2.0, 3.0-1.0*0.0-1.0/2.0), "rotation": new BABYLON.Vector3(0,Math.PI/2,0)},
-            {"position": new BABYLON.Vector3( 3.0, 2.5/2.0, 3.0-1.0*1.0-1.0/2.0), "rotation": new BABYLON.Vector3(0,Math.PI/2,0)},
-            {"position": new BABYLON.Vector3( 3.0, 2.5/2.0, 3.0-1.0*2.0-1.0/2.0), "rotation": new BABYLON.Vector3(0,Math.PI/2,0)},
+            {"position": new BABYLON.Vector3( conservatory_data.z, conservatory_data.y / 2.0, conservatory_data.z - glass_data.x * 0.0 - glass_data.x / 2.0), "rotation": new BABYLON.Vector3(0,Math.PI/2,0)},
+            {"position": new BABYLON.Vector3( conservatory_data.z, conservatory_data.y / 2.0, conservatory_data.z - glass_data.x * 1.0 - glass_data.x / 2.0), "rotation": new BABYLON.Vector3(0,Math.PI/2,0)},
+            {"position": new BABYLON.Vector3( conservatory_data.z, conservatory_data.y / 2.0, conservatory_data.z - glass_data.x * 2.0 - glass_data.x / 2.0), "rotation": new BABYLON.Vector3(0,Math.PI/2,0)},
         ];
 
         glass_params.forEach(function(e, i){
             // Glass
             var glass = BABYLON.Mesh.CreateBox('consercatory_windows_' + i, 1, scene);
+            glass.parent = conservatory;
             glass.position = e.position;
             glass.scaling  = glass_scaling;
             glass.material = material.glass;
@@ -122,54 +143,65 @@ window.addEventListener('DOMContentLoaded', function() {
             // Glass' armature
             var glass_armature_1 = BABYLON.Mesh.CreateBox('consercatory_windows_' + i + '_armature_1', 1, scene); // horizontal bottom
             glass_armature_1.parent = glass;
-            glass_armature_1.scaling = new BABYLON.Vector3(1.0,0.01,3.0);
+            glass_armature_1.scaling = new BABYLON.Vector3(glass_data.x,0.01,conservatory_data.z);
             glass_armature_1.position= new BABYLON.Vector3(0.0,-0.5,0.0);
 
             var glass_armature_2 = BABYLON.Mesh.CreateBox('consercatory_windows_' + i + '_armature_2', 1, scene); // horizontal top
             glass_armature_2.parent = glass;
-            glass_armature_2.scaling = new BABYLON.Vector3(1.0,0.01,3.0);
+            glass_armature_2.scaling = new BABYLON.Vector3(glass_data.x,0.01,conservatory_data.z);
             glass_armature_2.position= new BABYLON.Vector3(0.0,0.5,0.0);
 
             var glass_armature_3 = BABYLON.Mesh.CreateBox('consercatory_windows_' + i + '_armature_3', 1, scene); // vertical right
             glass_armature_3.parent = glass;
-            glass_armature_3.scaling = new BABYLON.Vector3(0.02,1.0,3.0);
+            glass_armature_3.scaling = new BABYLON.Vector3(0.02,glass_data.x,conservatory_data.z);
             glass_armature_3.position= new BABYLON.Vector3(0.5,0.0,0.0);
 
             var glass_armature_4 = BABYLON.Mesh.CreateBox('consercatory_windows_' + i + '_armature_4', 1, scene); // vertical left
             glass_armature_4.parent = glass;
-            glass_armature_4.scaling = new BABYLON.Vector3(0.02,1.0,3.0);
+            glass_armature_4.scaling = new BABYLON.Vector3(0.02,glass_data.x,conservatory_data.z);
             glass_armature_4.position= new BABYLON.Vector3(-0.5,0.0,0.0);
         });
 
         // create glass roof
 
+        var top_point = new BABYLON.Vector3(0.0, conservatory_data.y + 0.5, 0.0);
         var paths = [
-            [new BABYLON.Vector3(0.0, 3.0, 0.0), new BABYLON.Vector3(-3.0, 2.5, 0.0)],
-            [new BABYLON.Vector3(0.0, 3.0, 0.0), new BABYLON.Vector3(-3.0, 2.5, 1.0)],
-            [new BABYLON.Vector3(0.0, 3.0, 0.0), new BABYLON.Vector3(-3.0, 2.5, 2.0)],
-            [new BABYLON.Vector3(0.0, 3.0, 0.0), new BABYLON.Vector3(-3.0, 2.5, 3.0)],
+            [top_point, new BABYLON.Vector3(-conservatory_data.x / 2.0, conservatory_data.y, 0.0 * glass_data.x)],
+            [top_point, new BABYLON.Vector3(-conservatory_data.x / 2.0, conservatory_data.y, 1.0 * glass_data.x)],
+            [top_point, new BABYLON.Vector3(-conservatory_data.x / 2.0, conservatory_data.y, 2.0 * glass_data.x)],
+            [top_point, new BABYLON.Vector3(-conservatory_data.x / 2.0, conservatory_data.y, 3.0 * glass_data.x)],
 
-            [new BABYLON.Vector3(0.0, 3.0, 0.0), new BABYLON.Vector3(-3.0, 2.5, 3.0)],
-            [new BABYLON.Vector3(0.0, 3.0, 0.0), new BABYLON.Vector3(-2.0, 2.5, 3.0)],
-            [new BABYLON.Vector3(0.0, 3.0, 0.0), new BABYLON.Vector3(-1.0, 2.5, 3.0)],
-            [new BABYLON.Vector3(0.0, 3.0, 0.0), new BABYLON.Vector3( 0.0, 2.5, 3.0)],
-            [new BABYLON.Vector3(0.0, 3.0, 0.0), new BABYLON.Vector3( 1.0, 2.5, 3.0)],
-            [new BABYLON.Vector3(0.0, 3.0, 0.0), new BABYLON.Vector3( 2.0, 2.5, 3.0)],
-            [new BABYLON.Vector3(0.0, 3.0, 0.0), new BABYLON.Vector3( 3.0, 2.5, 3.0)],
+            [top_point, new BABYLON.Vector3(-3.0 * glass_data.x, conservatory_data.y, conservatory_data.z)],
+            [top_point, new BABYLON.Vector3(-2.0 * glass_data.x, conservatory_data.y, conservatory_data.z)],
+            [top_point, new BABYLON.Vector3(-1.0 * glass_data.x, conservatory_data.y, conservatory_data.z)],
+            [top_point, new BABYLON.Vector3( 0.0 * glass_data.x, conservatory_data.y, conservatory_data.z)],
+            [top_point, new BABYLON.Vector3( 1.0 * glass_data.x, conservatory_data.y, conservatory_data.z)],
+            [top_point, new BABYLON.Vector3( 2.0 * glass_data.x, conservatory_data.y, conservatory_data.z)],
+            [top_point, new BABYLON.Vector3( 3.0 * glass_data.x, conservatory_data.y, conservatory_data.z)],
 
-            [new BABYLON.Vector3(0.0, 3.0, 0.0), new BABYLON.Vector3( 3.0, 2.5, 0.0)],
-            [new BABYLON.Vector3(0.0, 3.0, 0.0), new BABYLON.Vector3( 3.0, 2.5, 1.0)],
-            [new BABYLON.Vector3(0.0, 3.0, 0.0), new BABYLON.Vector3( 3.0, 2.5, 2.0)],
-            [new BABYLON.Vector3(0.0, 3.0, 0.0), new BABYLON.Vector3( 3.0, 2.5, 3.0)],
+            [top_point, new BABYLON.Vector3( conservatory_data.x / 2.0, conservatory_data.y, 3.0 * glass_data.x)],
+            [top_point, new BABYLON.Vector3( conservatory_data.x / 2.0, conservatory_data.y, 2.0 * glass_data.x)],
+            [top_point, new BABYLON.Vector3( conservatory_data.x / 2.0, conservatory_data.y, 1.0 * glass_data.x)],
+            [top_point, new BABYLON.Vector3( conservatory_data.x / 2.0, conservatory_data.y, 0.0 * glass_data.x)],
         ];
 
         paths.forEach(function(e, i){
             var lines = BABYLON.Mesh.CreateLines("conservatory_roof_armature_" + i, e, scene); // draw edges
+            lines.parent = conservatory;
         });
 
         var ribbon = BABYLON.Mesh.CreateRibbon("consercatory_roof", paths, false, false, 0, scene); // draw faces
+        ribbon.parent = conservatory;
         ribbon.material = material.glass;
 
+        // create floor
+
+        var floor = BABYLON.Mesh.CreateBox('consercatory_floor', 1, scene);
+        floor.parent = conservatory;
+        floor.scaling = new BABYLON.Vector3(conservatory_data.x,0.01,conservatory_data.z);
+        floor.position = new BABYLON.Vector3(0.0,0.0,conservatory_data.z / 2.0);
+
+        return conservatory;
     }
 
     // call the createScene function
@@ -181,7 +213,11 @@ window.addEventListener('DOMContentLoaded', function() {
     createGround(scene);
 
     // create conservatory
-    createConservatory(scene);
+    var conservatory = createConservatory(scene);
+    conservatory.rotation.y = Math.PI;
+    conservatory.position = new BABYLON.Vector3(2.1,0.0,0.0);
+
+
 
     // run the render loop
     engine.runRenderLoop(function(){
