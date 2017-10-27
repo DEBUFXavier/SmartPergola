@@ -54,7 +54,7 @@ window.addEventListener('DOMContentLoaded', function() {
         material.glass.emissiveColor = new BABYLON.Color3(0.0,0.0,0.1);
         material.glass.specularColor = new BABYLON.Color3(0.8,0.8,0.8);
         material.glass.backFaceCulling = false;
-        material.glass.alpha = 0.4;
+        material.glass.alpha = 0.3;
 
         return material;
     }
@@ -82,9 +82,9 @@ window.addEventListener('DOMContentLoaded', function() {
         particleSystem.maxEmitBox = new BABYLON.Vector3( 0.5, -0.8, 0);  // To...
 
         // Colors of all particles
-        particleSystem.color1 = new BABYLON.Color4(0.7, 0.8, 1.0, 1.0);
+        /*particleSystem.color1 = new BABYLON.Color4(0.7, 0.8, 1.0, 1.0);
         particleSystem.color2 = new BABYLON.Color4(0.2, 0.5, 1.0, 1.0);
-        particleSystem.colorDead = new BABYLON.Color4(0, 0, 0.2, 0.0);
+        particleSystem.colorDead = new BABYLON.Color4(0, 0, 0.2, 0.0);*/
 
         // Size of each particle (random between...
         particleSystem.minSize = 0.1;
@@ -1021,6 +1021,31 @@ window.addEventListener('DOMContentLoaded', function() {
 
     }
 
+    var enableConditioningHOT = function() {
+        // Colors of all particles
+        particles.color1 = new BABYLON.Color4(0.8, 0.0, 0.0, 1.0);
+        particles.color2 = new BABYLON.Color4(0.9, 0.5, 0.1, 1.0);
+        particles.colorDead = new BABYLON.Color4(0.2, 0.0, 0.0, 0.0);
+
+        // Start
+        particles.start();
+    }
+
+    var enableConditioningCOLD = function() {
+        // Colors of all particles
+        particles.color1 = new BABYLON.Color4(0.7, 0.8, 1.0, 1.0);
+        particles.color2 = new BABYLON.Color4(0.2, 0.5, 1.0, 1.0);
+        particles.colorDead = new BABYLON.Color4(0, 0, 0.2, 0.0);
+
+        // Start particles
+        particles.start();
+    }
+
+    var disableConditioning = function() {
+        // Stop particles
+        particles.stop();
+    }
+
     // call the createScene function
     var scene = createScene();
 
@@ -1041,9 +1066,9 @@ window.addEventListener('DOMContentLoaded', function() {
 
     var r = confirm("OK to start AC");
     if (r == true) {
-        particles.start();
+        enableConditioningHOT();
     } else {
-        particles.stop();
+        disableConditioning();
     } 
 
     // run the render loop
