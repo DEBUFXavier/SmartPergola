@@ -1080,4 +1080,19 @@ window.addEventListener('DOMContentLoaded', function() {
     window.addEventListener('resize', function(){
         engine.resize();
     });
+
+    var socket = new io.connect"ws://localhost/");
+
+	socket.onmessage = function(message){
+	    switch(message) {
+	    case "light_on": // Lumière non implantée
+	    break;
+	    case "clim_chaud_on": enableConditioningHOT();
+	    break;
+	    case "clim_on": enableConditioningCOLD();
+	    break;
+	    case "clim_off": case "clim_chaud_off": disableConditioning();
+	    break;
+	    }
+	}
 });
