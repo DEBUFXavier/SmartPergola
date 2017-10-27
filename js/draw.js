@@ -1081,7 +1081,7 @@ window.addEventListener('DOMContentLoaded', function() {
         engine.resize();
     });
 
-    var socket = new io.connect"ws://localhost/");
+    var socket = new io.connect("ws://localhost/");
 
 	socket.onmessage = function(message){
 	    switch(message) {
