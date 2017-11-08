@@ -1,37 +1,22 @@
-## Welcome to GitHub Pages
+## Welcome to SmartPergola
+### Corentin BALLOT Xavier DEBUF Hanane HABIRECHE
+Après avoir cloné le projet, 
 
-You can use the [editor on GitHub](https://github.com/XavierDEBUF/SmartPergola/edit/master/README.md) to maintain and preview the content for your website in Markdown files.
+-changer le port serie /dev/tty??? par le chemin du port utilisé par l'arduino dans base.js
+-remplacer 'var mySerialPort = new serialport("/dev/ttyACM0", {
+   baudRate: 9600,
+   dataBits: 8,
+   parity: 'none',
+   'stopBits: 1,
+   flowControl: false,
+});'
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+-par 'var mySerialPort = new serialport("/dev/chemin/vers/le/port", {'
 
-### Markdown
+-Puis executer les commandes suivantes:
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+--construire le container:
+'docker build -t debuf/smartpergolas .'
 
-```markdown
-Syntax highlighted code block
-
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
-```
-
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/XavierDEBUF/SmartPergola/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://help.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
+--lancer le container en remplacant
+'docker run -t -i --privileged --device=/dev/chemin/vers/le/port -p 3004:3004 debuf/smartpergolas'
