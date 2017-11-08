@@ -1,0 +1,16 @@
+{
+  "name": "SmartPergolas_web_app",
+  "version": "1.0.0",
+  "description": "SmartPergolas App on Docker",
+  "author": "First Last <first.last@example.com>",
+  "main": "base.js",
+  "scripts": {
+    "start": "node base.js"
+  },
+  "dependencies": {
+    "express": "^4.13.3",
+    "socket.io": "2.0.4",
+    "serialport":"6.0.4",
+    "fs":""
+  }
+}

@@ -38,6 +38,8 @@ window.addEventListener('DOMContentLoaded', function() {
             "grass": new BABYLON.StandardMaterial('grass', scene),
             "gray_metal": new BABYLON.StandardMaterial('gray_metal', scene),
             "glass": new BABYLON.StandardMaterial('glass', scene),
+            "light_on": new BABYLON.StandardMaterial('light_on', scene),
+            "light_off": new BABYLON.StandardMaterial('light_off', scene),
         }
 
         material.grass.diffuseTexture = new BABYLON.Texture("img/textures/grass.jpg", scene);
@@ -55,6 +57,14 @@ window.addEventListener('DOMContentLoaded', function() {
         material.glass.specularColor = new BABYLON.Color3(0.8,0.8,0.8);
         material.glass.backFaceCulling = false;
         material.glass.alpha = 0.3;
+
+        material.light_on.diffuseColor = new BABYLON.Color3(1.0,1.0,1.0);
+        material.light_on.emissiveColor = new BABYLON.Color3(1.0,1.0,1.0);
+        material.light_on.specularColor = new BABYLON.Color3(1.0,1.0,1.0);
+
+        material.light_off.diffuseColor = new BABYLON.Color3(0.1,0.1,0.1);
+        material.light_off.emissiveColor = new BABYLON.Color3(0.1,0.1,0.1);
+        material.light_off.specularColor = new BABYLON.Color3(0.1,0.1,0.1);
 
         return material;
     }
@@ -122,6 +132,13 @@ window.addEventListener('DOMContentLoaded', function() {
         particles = particleSystem;
 
         return conditioning;
+    }
+
+    var createLuminaire = function(scene) {
+        var light = BABYLON.MeshBuilder.CreateSphere("luminaire", 1, scene);
+        light.scaling = new BABYLON.Vector3(0.4, 0.4, 0.4);
+
+        return light;
     }
 
     var createConservatory = function(scene) {
@@ -1046,6 +1063,14 @@ window.addEventListener('DOMContentLoaded', function() {
         particles.stop();
     }
 
+    var enableLight = function() {
+        conservatory_light.material = material.light_on;
+    }
+
+    var disableLight = function() {
+        conservatory_light.material = material.light_off;
+    }
+
     // call the createScene function
     var scene = createScene();
 
@@ -1059,6 +1084,10 @@ window.addEventListener('DOMContentLoaded', function() {
     conservatory.rotation.y = Math.PI;
     conservatory.position = new BABYLON.Vector3(2.1,0.0,0.0); //
 
+    // create conservatory light
+    var conservatory_light = createLuminaire(scene);
+    conservatory_light.position = new BABYLON.Vector3(1.05,2.4,0.0); //
+
     // create house
     var house = createHouse(scene);
     house.position = new BABYLON.Vector3(0.0,3.01,0.0); //
@@ -1067,8 +1096,10 @@ window.addEventListener('DOMContentLoaded', function() {
     var r = confirm("OK to start AC");
     if (r == true) {
         enableConditioningHOT();
+        enableLight();
     } else {
         disableConditioning();
+        disableLight();
     } 
 
     // run the render loop
@@ -1081,18 +1112,27 @@ window.addEventListener('DOMContentLoaded', function() {
         engine.resize();
     });
 
-    var socket = new io.connect("ws://localhost/");
+    var socket = new io.connect("ws://localhost:3004/");
+    socket.emit('join','Hello World from Client');
 
-	socket.onmessage = function(message){
-	    switch(message) {
-	    case "light_on": // Lumière non implantée
-	    break;
-	    case "clim_chaud_on": enableConditioningHOT();
-	    break;
-	    case "clim_on": enableConditioningCOLD();
-	    break;
-	    case "clim_off": case "clim_chaud_off": disableConditioning();
-	    break;
-	    }
+    socket.on('message', function (data) {
+	switch(data) {
+	case "light_on": enableLight();
+	console.log("message : light_on");
+	break;
+	case "light_off": disableLight();
+	console.log("message : light_off");
+	break;
+	case "clim_chaud_on": enableConditioningHOT();
+	console.log("message : clim_chaud_on");
+	break;
+	case "clim_on": enableConditioningCOLD();
+	console.log("message : clim_on");
+	break;
+	case "clim_off": case "clim_chaud_off": disableConditioning();
+	console.log("message : clim_off");
+	break;
 	}
+    });
 });
+
