@@ -1,22 +1,27 @@
-## Welcome to SmartPergola
-### Corentin BALLOT Xavier DEBUF Hanane HABIRECHE
-Après avoir cloné le projet, 
+# Welcome to SmartPergola
 
--changer le port serie /dev/tty??? par le chemin du port utilisé par l'arduino dans base.js
--remplacer 'var mySerialPort = new serialport("/dev/ttyACM0", {
+Projet réalisé par **Corentin BALLOT**, **Xavier DEBUF**, **Hanane HABIRECHE** dans le cadre du cours d'IoT.
+
+## Configuration
+
+- Changer le port serie `/dev/ttyXXXX` par le chemin du port utilisé par l'arduino dans le fichier `base.js`
+
+```
+var mySerialPort = new serialport("/dev/ttyXXXX", {
    baudRate: 9600,
    dataBits: 8,
    parity: 'none',
    'stopBits: 1,
    flowControl: false,
-});'
+});
+```
 
--par 'var mySerialPort = new serialport("/dev/chemin/vers/le/port", {'
+## Montage
 
--Puis executer les commandes suivantes:
+![Schema du montage](https://github.com/XavierDEBUF/SmartPergola/blob/master/Smartpergola.png)
 
---construire le container:
-'docker build -t debuf/smartpergolas .'
+## Lancement
 
---lancer le container en remplacant
-'docker run -t -i --privileged --device=/dev/chemin/vers/le/port -p 3004:3004 debuf/smartpergolas'
+- Construire le container `docker build -t debuf/smartpergolas .`
+- Lancer le container `docker run -t -i --privileged --device=/dev/chemin/vers/le/port -p 3004:3004 debuf/smartpergolas`
+- Acceder à http://localhost:3004
