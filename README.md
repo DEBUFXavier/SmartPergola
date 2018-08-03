@@ -1,6 +1,6 @@
 # Welcome to SmartPergola
 
-Projet réalisé par **Corentin BALLOT**, **Xavier DEBUF**, **Hanane HABIRECHE** dans le cadre du cours d'IoT.
+Projet réalisé par **Corentin BALLOT** et **Xavier DEBUF**.
 
 ## Configuration
 
