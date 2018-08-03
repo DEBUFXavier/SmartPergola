@@ -15,11 +15,6 @@ var mySerialPort = new serialport("/dev/ttyXXXX", {
    flowControl: false,
 });
 ```
-
-## Montage
-
-![Schema du montage](https://github.com/XavierDEBUF/SmartPergola/blob/master/Smartpergola.png)
-
 ## Lancement
 
 - Construire le container `docker build -t debuf/smartpergolas .`
