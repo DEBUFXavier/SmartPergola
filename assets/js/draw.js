@@ -1,38 +1,30 @@
 
 
 window.addEventListener('DOMContentLoaded', function() {
-
     var canvas = document.getElementById('renderCanvas');
     var engine = new BABYLON.Engine(canvas, true);
     var particles = 0;
     console.log('in');
-
     var createScene = function() {
         // create a basic BJS Scene object
         var scene = new BABYLON.Scene(engine);
-
         // create a FreeCamera, and set its position to (x:0, y:5, z:-10)
         //var camera = new BABYLON.FreeCamera('camera_1', new BABYLON.Vector3(0, 5,-10), scene);
         // Parameters : name, alpha, beta, radius, target, scene
         var camera = new BABYLON.ArcRotateCamera("ArcRotateCamera", 0.5, 0.5, 10, new BABYLON.Vector3(0, 0, 0), scene);
-
         // target the camera to scene origin
         camera.setTarget(BABYLON.Vector3.Zero());
         // attach the camera to the canvas
         camera.attachControl(canvas, false);
         // set zoom on scroll more accurate
         camera.wheelPrecision = 50; 
-
         // create a basic light, aiming 0,1,0 - meaning, to the sky
         var light = new BABYLON.HemisphericLight('light_1', new BABYLON.Vector3(0,1,0), scene);
-
         // Let's try our built-in 'sphere' shape. Params: name, subdivisions, size, scene
         //var sphere = BABYLON.Mesh.CreateSphere("sphere_repère", 16, 2, scene);
-
         // return the created scene
         return scene;
     }
-
     var createMaterial = function(scene) {
         var material = {
             "grass": new BABYLON.StandardMaterial('grass', scene),
@@ -41,7 +33,6 @@ window.addEventListener('DOMContentLoaded', function() {
             "light_on": new BABYLON.StandardMaterial('light_on', scene),
             "light_off": new BABYLON.StandardMaterial('light_off', scene),
         }
-
         material.grass.diffuseTexture = new BABYLON.Texture("img/textures/grass.jpg", scene);
         material.grass.specularColor = new BABYLON.Color3(0.0,0.0,0.0);
         material.grass.backFaceCulling = false;
@@ -79,54 +70,41 @@ window.addEventListener('DOMContentLoaded', function() {
     var createConditioning = function(scene) {
         var conditioning = BABYLON.Mesh.CreateBox("conditioning", 1, scene);
         conditioning.scaling = new BABYLON.Vector3(1.05, 0.31, 0.22);
-
         // Create a particle system
         var particleSystem = new BABYLON.ParticleSystem("particles", 2000, scene);
-
         //Texture of each particle
         particleSystem.particleTexture = new BABYLON.Texture("img/textures/particle.png", scene);
-
         // Where the particles come from
         particleSystem.emitter = conditioning; // the starting object, the emitter
         particleSystem.minEmitBox = new BABYLON.Vector3(-0.5, -0.8, 0); // Starting all from
         particleSystem.maxEmitBox = new BABYLON.Vector3( 0.5, -0.8, 0);  // To...
-
         // Colors of all particles
         /*particleSystem.color1 = new BABYLON.Color4(0.7, 0.8, 1.0, 1.0);
         particleSystem.color2 = new BABYLON.Color4(0.2, 0.5, 1.0, 1.0);
         particleSystem.colorDead = new BABYLON.Color4(0, 0, 0.2, 0.0);*/
-
         // Size of each particle (random between...
         particleSystem.minSize = 0.1;
         particleSystem.maxSize = 0.2;
-
         // Life time of each particle (random between...
         particleSystem.minLifeTime = 0.3;
         particleSystem.maxLifeTime = 0.8;
-
         // Emission rate
         particleSystem.emitRate = 1500;
-
         // Blend mode : BLENDMODE_ONEONE, or BLENDMODE_STANDARD
         particleSystem.blendMode = BABYLON.ParticleSystem.BLENDMODE_ONEONE;
-
         // Set the gravity of all particles
         //particleSystem.gravity = new BABYLON.Vector3(0, -9.81, 0);
         particleSystem.gravity = new BABYLON.Vector3(0, -7.00, 0);
-
         // Direction of each particle after it has been emitted
         particleSystem.direction1 = new BABYLON.Vector3( 0.2, 1.0, 5);
         particleSystem.direction2 = new BABYLON.Vector3(-2.5, 1.0, 1);
-
         // Angular speed, in radians
         particleSystem.minAngularSpeed = 0;
         particleSystem.maxAngularSpeed = Math.PI;
-
         // Speed
         particleSystem.minEmitPower = 1;
         particleSystem.maxEmitPower = 3;
         particleSystem.updateSpeed = 0.0005;
-
         // Start the particle system
         //particleSystem.start();
         particles = particleSystem;
